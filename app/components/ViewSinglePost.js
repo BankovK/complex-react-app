@@ -10,9 +10,13 @@ function ViewSinglePost() {
   const [post, setPost] = useState()
 
   useEffect(() => {
+    const getRequest = Axios.CancelToken.source()
+
     async function fetchPost() {
       try {
-        const response = await Axios.get(`post/${id}`)
+        const response = await Axios.get(`post/${id}`, {
+          cancelToken: getRequest.token
+        })
         setPost(response.data)
         setIsLoading(false)
       } catch (error) {
@@ -20,6 +24,9 @@ function ViewSinglePost() {
       }
     }
     fetchPost()
+    return () => {
+      getRequest.cancel()
+    }
   }, [])
 
   if (isLoading)
