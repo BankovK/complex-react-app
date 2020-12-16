@@ -15,7 +15,10 @@ function CreatePost(props) {
         body,
         token: localStorage.getItem("complexappToken")
       })
+      // Redirect
+      props.addFlashMessage("Post created.")
       props.history.push(`/post/${response.data}`)
+
       console.log("Post successful")
     } catch (error) {
       console.log("Failed")
