@@ -1,7 +1,7 @@
 import React from "react"
 import Page from "./Page"
 
-function About() {
+function About(params) {
   return (
     <Page title="About Us">
       <h2>About Us</h2>
