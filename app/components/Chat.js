@@ -2,11 +2,13 @@ import React, { useContext, useEffect, useRef } from "react"
 import StateContext from "../StateContext"
 import DispatchContext from "../DispatchContext"
 import { useImmer } from "use-immer"
+import { Link } from "react-router-dom"
 import io from "socket.io-client"
 const socket = io("http://localhost:8080")
 
 function Chat() {
   const chatInputField = useRef(null)
+  const chatLog = useRef(null)
   const appState = useContext(StateContext)
   const appDispatch = useContext(DispatchContext)
   const [state, setState] = useImmer({
@@ -17,6 +19,7 @@ function Chat() {
   useEffect(() => {
     if (appState.isChatOpen) {
       chatInputField.current.focus()
+      appDispatch({ type: "clearUnreadChatCount" })
     }
   }, [appState.isChatOpen])
 
@@ -30,6 +33,13 @@ function Chat() {
       socket.removeAllListeners()
     }
   }, [])
+
+  useEffect(() => {
+    chatLog.current.scrollTop = chatLog.current.scrollHeight
+    if (state.chatMessages.length && !appState.isChatOpen) {
+      appDispatch({ type: "incrementUnreadChatCount" })
+    }
+  }, [state.chatMessages])
 
   function handleFieldChange(e) {
     const value = e.target.value
@@ -73,7 +83,7 @@ function Chat() {
           <i className="fas fa-times-circle"></i>
         </span>
       </div>
-      <div id="chat" className="chat-log">
+      <div id="chat" ref={chatLog} className="chat-log">
         {state.chatMessages.map((message, index) => {
           if (message.username == appState.user.username) {
             return (
@@ -87,14 +97,14 @@ function Chat() {
           }
           return (
             <div key={index} className="chat-other">
-              <a href="#">
+              <Link to={`/profile/${message.username}`}>
                 <img className="avatar-tiny" src={message.avatar} />
-              </a>
+              </Link>
               <div className="chat-message">
                 <div className="chat-message-inner">
-                  <a href="#">
+                  <Link to={`/profile/${message.username}`}>
                     <strong>{message.username}:</strong>
-                  </a>{" "}
+                  </Link>{" "}
                   {message.message}
                 </div>
               </div>
