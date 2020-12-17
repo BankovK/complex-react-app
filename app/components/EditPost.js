@@ -28,19 +28,35 @@ function EditPost() {
         draft.isFetching = false
         break
       case "titleChange":
+        draft.title.isInvalid = false
         draft.title.value = action.value
         break
       case "bodyChange":
+        draft.body.isInvalid = false
         draft.body.value = action.value
         break
       case "submitRequest":
-        draft.sendCount++
+        if (!draft.title.isInvalid && !draft.body.isInvalid) {
+          draft.sendCount++
+        }
         break
       case "saveRequestStarted":
         draft.isSaving = true
         break
       case "saveRequestFinished":
         draft.isSaving = false
+        break
+      case "titleCheck":
+        if (!action.value.trim()) {
+          draft.title.isInvalid = true
+          draft.title.message = "Provide a title!"
+        }
+        break
+      case "bodyCheck":
+        if (!action.value.trim()) {
+          draft.body.isInvalid = true
+          draft.body.message = "Provide content!"
+        }
         break
     }
   }
@@ -49,6 +65,8 @@ function EditPost() {
 
   function submitHandler(e) {
     e.preventDefault()
+    dispatch({ type: "titleCheck", value: state.title.value })
+    dispatch({ type: "bodyCheck", value: state.body.value })
     dispatch({ type: "submitRequest" })
   }
 
@@ -130,7 +148,15 @@ function EditPost() {
             onChange={e =>
               dispatch({ type: "titleChange", value: e.target.value })
             }
+            onBlur={e =>
+              dispatch({ type: "titleCheck", value: e.target.value })
+            }
           />
+          {state.title.isInvalid && (
+            <div className="alert alert-danger small liveValidateMessage">
+              {state.title.message}
+            </div>
+          )}
         </div>
 
         <div className="form-group">
@@ -146,7 +172,13 @@ function EditPost() {
             onChange={e =>
               dispatch({ type: "bodyChange", value: e.target.value })
             }
+            onBlur={e => dispatch({ type: "bodyCheck", value: e.target.value })}
           />
+          {state.body.isInvalid && (
+            <div className="alert alert-danger small liveValidateMessage">
+              {state.body.message}
+            </div>
+          )}
         </div>
 
         <button className="btn btn-primary" disabled={state.isSaving}>
