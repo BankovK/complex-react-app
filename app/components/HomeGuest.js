@@ -1,24 +1,80 @@
-import React, { useState } from "react"
+import React from "react"
 import Page from "./Page"
-import Axios from "axios"
+import { useImmerReducer } from "use-immer"
+import { CSSTransition } from "react-transition-group"
 
 function HomeGuest() {
-  const [username, setUsername] = useState()
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
+  const initialState = {
+    username: {
+      value: "",
+      isInvalid: false,
+      message: "",
+      isUnique: false,
+      checkCount: 0
+    },
+    email: {
+      value: "",
+      isInvalid: false,
+      message: "",
+      isUnique: false,
+      checkCount: 0
+    },
+    password: {
+      value: "",
+      isInvalid: false,
+      message: ""
+    },
+    submitCount: 0
+  }
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-    try {
-      await Axios.post("/register", {
-        username,
-        email,
-        password
-      })
-      console.log("User created.")
-    } catch (error) {
-      console.log("User creation error!")
+  function registrationFormReducer(draft, action) {
+    switch (action.type) {
+      case "usernameImmediately":
+        draft.username.isInvalid = false
+        draft.username.value = action.value
+        if (draft.username.value.length > 30) {
+          draft.username.isInvalid = true
+          draft.username.message = "Username cannot exceed 30 characters."
+        }
+        if (
+          draft.username.value &&
+          !/^([a-zA-z0-9]+)$/.test(draft.username.value)
+        ) {
+          draft.username.isInvalid = true
+          draft.username.message =
+            "Username can only contain numbers and letters."
+        }
+        break
+      case "usernameAfterDelay":
+        break
+      case "usernameUniqueResults":
+        break
+      case "emailImmediately":
+        draft.email.isInvalid = false
+        draft.email.value = action.value
+        break
+      case "emailAfterDelay":
+        break
+      case "emailUniqueResults":
+        break
+      case "passwordImmediately":
+        draft.password.isInvalid = false
+        draft.password.value = action.value
+        break
+      case "passwordAfterDelay":
+        break
+      case "submitForm":
+        break
     }
+  }
+
+  const [state, dispatch] = useImmerReducer(
+    registrationFormReducer,
+    initialState
+  )
+
+  function handleSubmit(e) {
+    e.preventDefault()
   }
 
   return (
@@ -40,7 +96,12 @@ function HomeGuest() {
                 <small>Username</small>
               </label>
               <input
-                onChange={e => setUsername(e.target.value)}
+                onChange={e =>
+                  dispatch({
+                    type: "usernameImmediately",
+                    value: e.target.value
+                  })
+                }
                 id="username-register"
                 name="username"
                 className="form-control"
@@ -48,13 +109,28 @@ function HomeGuest() {
                 placeholder="Pick a username"
                 autoComplete="off"
               />
+              <CSSTransition
+                in={state.username.isInvalid}
+                timeout={330}
+                classNames="liveValidateMessage"
+                unmountOnExit
+              >
+                <div className="alert alert-danger small liveValidateMessage">
+                  {state.username.message}
+                </div>
+              </CSSTransition>
             </div>
             <div className="form-group">
               <label htmlFor="email-register" className="text-muted mb-1">
                 <small>Email</small>
               </label>
               <input
-                onChange={e => setEmail(e.target.value)}
+                onChange={e =>
+                  dispatch({
+                    type: "emailImmediately",
+                    value: e.target.value
+                  })
+                }
                 id="email-register"
                 name="email"
                 className="form-control"
@@ -68,7 +144,12 @@ function HomeGuest() {
                 <small>Password</small>
               </label>
               <input
-                onChange={e => setPassword(e.target.value)}
+                onChange={e =>
+                  dispatch({
+                    type: "passwordImmediately",
+                    value: e.target.value
+                  })
+                }
                 id="password-register"
                 name="password"
                 className="form-control"
