@@ -34,7 +34,7 @@ function ViewSinglePost(props) {
     return () => {
       getRequest.cancel()
     }
-  }, [])
+  }, [id])
 
   if (!isLoading && !post) {
     return <NotFound />
