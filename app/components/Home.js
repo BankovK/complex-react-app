@@ -15,7 +15,7 @@ function Home() {
   })
 
   useEffect(() => {
-    const postRequest = Axios.CancelToken.source()
+    const request = Axios.CancelToken.source()
 
     async function fetchData() {
       try {
@@ -25,7 +25,7 @@ function Home() {
             token: appState.user.token
           },
           {
-            cancelToken: postRequest.token
+            cancelToken: request.token
           }
         )
         setState(draft => {
@@ -38,7 +38,7 @@ function Home() {
     }
     fetchData()
     return () => {
-      postRequest.cancel()
+      request.cancel()
     }
   }, [])
 

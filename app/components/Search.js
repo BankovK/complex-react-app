@@ -41,13 +41,13 @@ function Search() {
 
   useEffect(() => {
     if (state.requestCount) {
-      const getRequest = Axios.CancelToken.source()
+      const request = Axios.CancelToken.source()
       async function fetchResults() {
         try {
           const response = await Axios.post(
             "/search",
             { searchTerm: state.searchTerm },
-            { cancelToken: getRequest.token }
+            { cancelToken: request.token }
           )
           setState(draft => {
             draft.results = response.data
@@ -58,7 +58,7 @@ function Search() {
         }
       }
       fetchResults()
-      return () => getRequest.cancel()
+      return () => request.cancel()
     }
   }, [state.requestCount])
 

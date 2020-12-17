@@ -77,12 +77,12 @@ function EditPost(props) {
 
   // Get post
   useEffect(() => {
-    const getRequest = Axios.CancelToken.source()
+    const request = Axios.CancelToken.source()
 
     async function fetchPost() {
       try {
         const response = await Axios.get(`post/${state.id}`, {
-          cancelToken: getRequest.token
+          cancelToken: request.token
         })
         if (response.data) {
           dispatch({ type: "fetchComplete", value: response.data })
@@ -102,7 +102,7 @@ function EditPost(props) {
     }
     fetchPost()
     return () => {
-      getRequest.cancel()
+      request.cancel()
     }
   }, [])
 
@@ -110,7 +110,7 @@ function EditPost(props) {
   useEffect(() => {
     if (state.sendCount) {
       dispatch({ type: "saveRequestStarted" })
-      const postRequest = Axios.CancelToken.source()
+      const request = Axios.CancelToken.source()
 
       async function updatePost() {
         try {
@@ -122,18 +122,18 @@ function EditPost(props) {
               token: appState.user.token
             },
             {
-              cancelToken: postRequest.token
+              cancelToken: request.token
             }
           )
           dispatch({ type: "saveRequestFinished" })
           appDispatch({ type: "flashMessage", value: "Post updated." })
         } catch (error) {
-          console.log("Failed to load posts.")
+          console.log("Failed to update posts.")
         }
       }
       updatePost()
       return () => {
-        postRequest.cancel()
+        request.cancel()
       }
     }
   }, [state.sendCount])

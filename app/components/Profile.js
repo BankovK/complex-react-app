@@ -28,7 +28,7 @@ function Profile() {
   })
 
   useEffect(() => {
-    const postRequest = Axios.CancelToken.source()
+    const request = Axios.CancelToken.source()
 
     async function fetchProfileData() {
       try {
@@ -38,7 +38,7 @@ function Profile() {
             token: appState.user.token
           },
           {
-            cancelToken: postRequest.token
+            cancelToken: request.token
           }
         )
         setState(draft => {
@@ -50,7 +50,7 @@ function Profile() {
     }
     fetchProfileData()
     return () => {
-      postRequest.cancel()
+      request.cancel()
     }
   }, [username])
 
@@ -59,7 +59,7 @@ function Profile() {
       setState(draft => {
         draft.followActionLoading = true
       })
-      const postRequest = Axios.CancelToken.source()
+      const request = Axios.CancelToken.source()
 
       async function addFollow() {
         try {
@@ -69,7 +69,7 @@ function Profile() {
               token: appState.user.token
             },
             {
-              cancelToken: postRequest.token
+              cancelToken: request.token
             }
           )
           setState(draft => {
@@ -83,7 +83,7 @@ function Profile() {
       }
       addFollow()
       return () => {
-        postRequest.cancel()
+        request.cancel()
       }
     }
   }, [state.startFollowingRequestCount])
@@ -93,7 +93,7 @@ function Profile() {
       setState(draft => {
         draft.followActionLoading = true
       })
-      const postRequest = Axios.CancelToken.source()
+      const request = Axios.CancelToken.source()
 
       async function removeFollow() {
         try {
@@ -103,7 +103,7 @@ function Profile() {
               token: appState.user.token
             },
             {
-              cancelToken: postRequest.token
+              cancelToken: request.token
             }
           )
           setState(draft => {
@@ -117,7 +117,7 @@ function Profile() {
       }
       removeFollow()
       return () => {
-        postRequest.cancel()
+        request.cancel()
       }
     }
   }, [state.stopFollowingRequestCount])

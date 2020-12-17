@@ -9,12 +9,12 @@ function ProfileFollowing() {
   const { username } = useParams()
 
   useEffect(() => {
-    const getRequest = Axios.CancelToken.source()
+    const request = Axios.CancelToken.source()
 
-    async function fetchPosts() {
+    async function fetchFollowing() {
       try {
         const response = await Axios.get(`profile/${username}/following`, {
-          cancelToken: getRequest.token
+          cancelToken: request.token
         })
         setPosts(response.data)
         setIsLoading(false)
@@ -22,9 +22,9 @@ function ProfileFollowing() {
         console.log("Failed to load following.")
       }
     }
-    fetchPosts()
+    fetchFollowing()
     return () => {
-      getRequest.cancel()
+      request.cancel()
     }
   }, [username])
 

@@ -17,22 +17,22 @@ function ViewSinglePost(props) {
   const [post, setPost] = useState()
 
   useEffect(() => {
-    const getRequest = Axios.CancelToken.source()
+    const request = Axios.CancelToken.source()
 
     async function fetchPost() {
       try {
         const response = await Axios.get(`post/${id}`, {
-          cancelToken: getRequest.token
+          cancelToken: request.token
         })
         setPost(response.data)
         setIsLoading(false)
       } catch (error) {
-        console.log("Failed to load posts.")
+        console.log("Failed to load post.")
       }
     }
     fetchPost()
     return () => {
-      getRequest.cancel()
+      request.cancel()
     }
   }, [id])
 
