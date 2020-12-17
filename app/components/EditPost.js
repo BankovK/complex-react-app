@@ -1,13 +1,14 @@
 import React, { useContext, useEffect } from "react"
 import { useImmerReducer } from "use-immer"
 import Page from "./Page"
-import { useParams } from "react-router-dom"
+import { useParams, Link, withRouter } from "react-router-dom"
 import Axios from "axios"
 import LoadingDotsIcon from "./LoadingDotsIcon"
+import NotFound from "./NotFound"
 import StateContext from "../StateContext"
 import DispatchContext from "../DispatchContext"
 
-function EditPost() {
+function EditPost(props) {
   const appState = useContext(StateContext)
   const appDispatch = useContext(DispatchContext)
 
@@ -17,7 +18,8 @@ function EditPost() {
     isFetching: true,
     isSaving: false,
     id: useParams().id,
-    sendCount: 0
+    sendCount: 0,
+    notFound: false
   }
 
   function editPostReducer(draft, action) {
@@ -58,6 +60,9 @@ function EditPost() {
           draft.body.message = "Provide content!"
         }
         break
+      case "notFound":
+        draft.notFound = true
+        break
     }
   }
 
@@ -79,7 +84,18 @@ function EditPost() {
         const response = await Axios.get(`post/${state.id}`, {
           cancelToken: getRequest.token
         })
-        dispatch({ type: "fetchComplete", value: response.data })
+        if (response.data) {
+          dispatch({ type: "fetchComplete", value: response.data })
+          if (appState.user.username != response.data.author.username) {
+            appDispatch({
+              type: "flashMessage",
+              value: "You are not allowed to change that post!"
+            })
+            props.history.push("/")
+          }
+        } else {
+          dispatch({ type: "notFound" })
+        }
       } catch (error) {
         console.log("Failed to load posts.")
       }
@@ -96,7 +112,7 @@ function EditPost() {
       dispatch({ type: "saveRequestStarted" })
       const postRequest = Axios.CancelToken.source()
 
-      async function fetchPost() {
+      async function updatePost() {
         try {
           const response = await Axios.post(
             `post/${state.id}/edit`,
@@ -115,12 +131,16 @@ function EditPost() {
           console.log("Failed to load posts.")
         }
       }
-      fetchPost()
+      updatePost()
       return () => {
         postRequest.cancel()
       }
     }
   }, [state.sendCount])
+
+  if (state.notFound) {
+    return <NotFound />
+  }
 
   if (state.isFetching)
     return (
@@ -131,7 +151,10 @@ function EditPost() {
 
   return (
     <Page title="Edit Post">
-      <form onSubmit={submitHandler}>
+      <Link className="small font-weight-bold" to={`/post/${state.id}`}>
+        Back to view
+      </Link>
+      <form className="mt-3" onSubmit={submitHandler}>
         <div className="form-group">
           <label htmlFor="post-title" className="text-muted mb-1">
             <small>Title</small>
@@ -189,4 +212,4 @@ function EditPost() {
   )
 }
 
-export default EditPost
+export default withRouter(EditPost)
