@@ -61,7 +61,7 @@ function Profile() {
       })
       const postRequest = Axios.CancelToken.source()
 
-      async function fetchProfileData() {
+      async function addFollow() {
         try {
           const response = await Axios.post(
             `/addFollow/${state.profileData.profileUsername}`,
@@ -81,7 +81,7 @@ function Profile() {
           console.log("Failed to add a follow.")
         }
       }
-      fetchProfileData()
+      addFollow()
       return () => {
         postRequest.cancel()
       }
@@ -95,7 +95,7 @@ function Profile() {
       })
       const postRequest = Axios.CancelToken.source()
 
-      async function fetchProfileData() {
+      async function removeFollow() {
         try {
           const response = await Axios.post(
             `/removeFollow/${state.profileData.profileUsername}`,
@@ -112,10 +112,10 @@ function Profile() {
             draft.followActionLoading = false
           })
         } catch (error) {
-          console.log("Failed to add a follow.")
+          console.log("Failed to remove a follow.")
         }
       }
-      fetchProfileData()
+      removeFollow()
       return () => {
         postRequest.cancel()
       }
