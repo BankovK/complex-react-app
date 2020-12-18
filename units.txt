@@ -1,0 +1,52 @@
+16. Starting Our Complex App
+17. Routing (Single Page Application)
+20. Create a Reusable "Container" Component
+21. Quick Details & Composition
+26. Sending a Request From the Front-End
+27. Access Form Field Values with React
+28. Logging In
+29. Render Different Components Depending on State
+30. Persisting State (Local Storage)
+31. Conditional Homepage Content
+32. Create Post Screen
+33. View Single Post Screen
+34. Flash Messages
+35. Context
+36. useReducer
+37. A Powerful Duo: useReducer & Context
+38. What is Immer?
+39. useEffect Practice
+40. Profile Screen
+41. Load Posts by Author
+42. Make Single Post Screen Actually Load The Real Content
+43. Animated Loading Icon
+44. Cleaning Up After Ourselves (useEffect)
+45. Markdown in React
+46. Adding Tooltips on Hover for Actions
+47. Edit (Update) Post Component
+48. Edit Post Continued
+49. Client-Side Form Validation
+50. Quick Attention To Detail Features
+51. Delete a Post
+52. Setting Up Search Overlay
+53. React Transition Group (CSS Transition)
+54. Waiting for User To Stop Typing
+55. Finishing Search (Part 1)
+56. Finishing Search (Part 2)
+57. Follow User Feature
+58. Profile Followers and Following Tabs
+59. Homepage Post Feed
+60. Live Chat User Interface
+61. Sending & Receiving Chats (Part 1)
+62. Sending & Receiving Chats (Part 2)
+63. Finishing Chat
+64. Improving Registration Form
+65. Finishing Registration Form (Part 1)
+67. Finishing Registration Form (Part 2)
+68. Quick Flash Message Details
+69. Proactively Check If Token Has Expired
+70. React Suspense - Lazy Loading (part 1)
+71. React Suspense - Lazy Loading (part 2)
+73. Building a "Dist" Copy of Our Site
+74. React Outside of the Browser (Part 1)
+75. React Outside of the Browser (Part 2)
